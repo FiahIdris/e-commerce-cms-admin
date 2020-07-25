@@ -45,16 +45,16 @@
       >
         <form ref="form" @submit.stop.prevent="edit(id)">
           <b-form-group label="Name" label-for="name">
-            <b-form-input id="name" v-model="name" required></b-form-input>
+            <b-form-input id="name" v-model="name" required>{{product.name}}</b-form-input>
           </b-form-group>
           <b-form-group label="Price" label-for="price">
-            <b-form-input id="price" v-model="price" required></b-form-input>
+            <b-form-input id="price" v-model="price" required>{{product.price}}</b-form-input>
           </b-form-group>
           <b-form-group label="Stock" label-for="stock">
-            <b-form-input id="stock" v-model="stock" required></b-form-input>
+            <b-form-input id="stock" v-model="stock" required>{{product.stock}}</b-form-input>
           </b-form-group>
           <b-form-group label="Image_url" label-for="image_url">
-            <b-form-input id="image_url" v-model="image_url" required></b-form-input>
+            <b-form-input id="image_url" v-model="image_url" required>{{product.image_url}}</b-form-input>
           </b-form-group>
         </form>
       </b-modal>
