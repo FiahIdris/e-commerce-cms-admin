@@ -3,26 +3,27 @@
      <Navbar />
   <div class="container">
     <div class="col-sm-12 col-lg-6">
-      <img src="https://img.jakpost.net/c/2019/03/02/2019_03_02_66706_1551461528._large.jpg" />
+      <img v-if="image_url" v-bind:src="image_url" />
+      <h4 v-else>Your product image will appear here</h4>
     </div>
     <div class="col-sm-12 col-lg-6 form-add">
       <form @submit="newProduct">
         <div class="form-group">
-          <label for="name"></label>
-          <input type="text" class="form-control" placeholder="name" v-model="name"/>
-        </div>
+          <label for="name">product name:</label>
+          <input type="text" class="form-control" v-model="name"/>
+        </div><br>
         <div class="form-group">
-          <label for="price"></label>
-          <input type="number" class="form-control" placeholder="price" v-model="price"/>
-        </div>
+          <label for="price">price:</label>
+          <input type="number" class="form-control" v-model="price"/>
+        </div><br>
         <div class="form-group">
-          <label for="stock"></label>
-          <input type="number" class="form-control" placeholder="stock" v-model="stock"/>
-        </div>
+          <label for="stock">stock:</label>
+          <input type="number" class="form-control" v-model="stock"/>
+        </div><br>
         <div class="form-group">
-          <label for="image_url"></label>
-          <input type="text" class="form-control" placeholder="image_url" v-model="image_url"/>
-        </div>
+          <label for="image_url">image_url:</label>
+          <input type="text" class="form-control" v-model="image_url"/>
+        </div><br>
         <div class="d-flex div-btn">
           <button class="btn">Add</button>
           <button @click.prevent="cancel" class="btn">Cancel</button>
@@ -60,7 +61,6 @@ export default {
         image_url: this.image_url
       }
       this.$store.dispatch('newProduct', newProduct)
-      this.$store.dispatch('fetchData')
       this.$router.push('/products')
     }
   }
@@ -83,8 +83,13 @@ export default {
 .col-lg-6 {
   padding-top:10px;
 }
+.form-add{
+  margin-top: 10px;
+}
 .form-group{
   height:40px;
+  color: white;
+  text-shadow: #e84a5f;
 }
 img {
   margin-top: 20px;
@@ -101,15 +106,19 @@ button {
   width:70px;
   margin-right: 10px;
   margin-top: 30px;
-  background-color: #e84a5f;
-  color: white;
+  background-color: #fbd07c;
+  color: #e84a5f;
 }
 button:hover{
-  color:#e84a5f;
+  color:white;
   background-color:#fa9372;
 }
 .div-btn{
   margin-bottom: 20px;
-  margin-top: 20px;
+}
+h4{
+  text-align: center;
+  margin:200px auto;
+  color:#ffed00;
 }
 </style>

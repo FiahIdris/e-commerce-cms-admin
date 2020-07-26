@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from '../api/axiosInstance'
 import router from '../router'
+import Swal from 'sweetalert2'
 
 Vue.use(Vuex)
 export default new Vuex.Store({
@@ -31,7 +32,7 @@ export default new Vuex.Store({
           router.push('/products')
         })
         .catch(err => {
-          console.log(err)
+          console.log('failed to login', err)
         })
     },
     fetchData ({ commit }) {
@@ -47,10 +48,10 @@ export default new Vuex.Store({
           commit('FETCH_DATA', data.data)
         })
         .catch(err => {
-          console.log(err.response)
+          console.log('failed fetching data', err)
         })
     },
-    newProduct ({ commit }, payload) {
+    newProduct ({ commit, dispatch }, payload) {
       // console.log(payload)
       axios({
         url: '/products',
@@ -63,13 +64,24 @@ export default new Vuex.Store({
         }
       })
         .then(data => {
-          console.log(data)
+          console.log('success added')
+          dispatch('fetchData')
+          Swal.fire('Success adding a new product')
         })
         .catch(err => {
           console.log(err.response.data.errors)
+          let error = err.response.data.errors[0].errors
+          if (err.response.data.errors[0].errors === 'Validation min on price failed') {
+            error = 'price/stock must be greater than 0'
+          }
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops... Sorry!',
+            text: `${error}`
+          })
         })
     },
-    edit ({ commit }, payload) {
+    edit ({ commit, dispatch }, payload) {
       axios({
         url: '/products/' + payload.id,
         method: 'put',
@@ -81,13 +93,19 @@ export default new Vuex.Store({
         }
       })
         .then(data => {
-          console.log('success edit on server')
+          console.log('success editing')
+          dispatch('fetchData')
         })
         .catch(err => {
-          console.log(err)
+          console.log(err.response)
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops... Sorry!',
+            text: 'Any field cannot be empty'
+          })
         })
     },
-    deleteProduct ({ commit }, id) {
+    deleteProduct ({ commit, dispatch }, id) {
       axios({
         url: '/products/' + id,
         method: 'delete',
@@ -96,10 +114,17 @@ export default new Vuex.Store({
         }
       })
         .then(response => {
-          console.log(response)
+          console.log('success deleted')
+          dispatch('fetchData')
+          Swal.fire('Success destroying the product')
         })
         .catch(err => {
-          console.log('gak kedelete', err)
+          console.log('failed to delete', err)
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops... Sorry!',
+            text: `${err.response.data.message}`
+          })
         })
     }
   },

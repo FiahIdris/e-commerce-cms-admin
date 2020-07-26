@@ -26,7 +26,7 @@
             />
           </td>
           <td>
-            <a href="#" v-b-modal.modal-prevent-closing @click.prevent="param(product.id)"><i class="fas fa-pencil-alt fa-2x"></i></a>
+            <a href="#" v-b-modal.modal-prevent-closing @click.prevent="param(product)"><i class="fas fa-pencil-alt fa-2x"></i></a>
             <a href="#" @click.prevent="deleteProduct(product.id)"><i class="fas fa-trash-alt fa-2x"></i></a>
           </td>
         </tr>
@@ -43,18 +43,18 @@
         @hidden="resetModal"
         @ok="handleOk"
       >
-        <form ref="form" @submit.stop.prevent="edit(id)">
-          <b-form-group label="Name" label-for="name">
-            <b-form-input id="name" v-model="name" required>{{product.name}}</b-form-input>
+        <form ref="form" @submit.stop.prevent="edit(product.id)">
+          <b-form-group label='Product name:' label-for="name">
+            <b-form-input v-if="product" :placeholder="product.name" type="text" id="name" v-model="name" ></b-form-input>
           </b-form-group>
-          <b-form-group label="Price" label-for="price">
-            <b-form-input id="price" v-model="price" required>{{product.price}}</b-form-input>
+          <b-form-group label='Product price:' label-for="price">
+            <b-form-input v-if="product" :placeholder="product.price.toString()" type="number" id="price" v-model="price"></b-form-input>
           </b-form-group>
-          <b-form-group label="Stock" label-for="stock">
-            <b-form-input id="stock" v-model="stock" required>{{product.stock}}</b-form-input>
+          <b-form-group label='Product stock:' label-for="stock">
+            <b-form-input v-if="product" :placeholder="product.stock.toString()" type="number" id="stock" v-model="stock"></b-form-input>
           </b-form-group>
-          <b-form-group label="Image_url" label-for="image_url">
-            <b-form-input id="image_url" v-model="image_url" required>{{product.image_url}}</b-form-input>
+          <b-form-group label='Image_url:' label-for="image_url">
+            <b-form-input v-if="product" :placeholder="product.image_url" type="text" id="image_url" v-model="image_url"></b-form-input>
           </b-form-group>
         </form>
       </b-modal>
@@ -63,15 +63,16 @@
 </template>
 
 <script>
+import Swal from 'sweetalert2'
 export default {
   name: 'Products',
   data () {
     return {
       name: '',
-      price: '',
-      stock: '',
+      price: 0,
+      stock: 0,
       image_url: '',
-      id: ''
+      product: ''
     }
   },
   methods: {
@@ -96,17 +97,35 @@ export default {
         price: this.price,
         stock: this.stock,
         image_url: this.image_url,
-        id: param
+        id: this.product.id
       }
       this.$store.dispatch('edit', dataEdit)
-      this.$store.dispatch('fetchData')
     },
-    param (id) {
-      this.id = id
+    param (product) {
+      this.product = product
     },
     deleteProduct (id) {
-      this.$store.dispatch('deleteProduct', id)
-      this.$store.dispatch('fetchData')
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'You would not be able to roll back time!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#24a19c',
+        cancelButtonColor: '#d45079',
+        confirmButtonText: 'Yes,never mind!'
+      })
+        .then(result => {
+          if (result.value) {
+            this.$store.dispatch('deleteProduct', id)
+          }
+        })
+        .catch(err => {
+          Swal.fire({
+            icon: 'error',
+            title: 'Oops... Sorry!',
+            text: `${err.response.data.message}`
+          })
+        })
     }
   },
   created () {
@@ -133,7 +152,7 @@ thead{
   text-align: center;
   border-style: outset;
   border-color:#ffc8c8;
-  font-size: 25px;
+  font-size: 20px;
   color:white;
   top: 100px;
 }
@@ -176,13 +195,8 @@ a{
 }
 form{
   font-family: 'Kalam', cursive;
-  font-size: 20px;
-}
-b-form-input, b-modal{
-  font-family: 'Kalam', cursive;
-  font-size: 20px;
-  height:30px;
+  font-size: 15px;
+  padding:10px;
   color:#e84a5f;
 }
-
 </style>
