@@ -1,6 +1,13 @@
 Deploy Here:
 
-Ecommerce/CMS-Server
+[Ecommerce/CMS-Server](https://ecommerce-cms-admin.web.app/login)
+
+  * **Data Params**
+    
+    | key | value | required |
+    | :--: | :--: | :--: |
+    | email | admin@mail.com| true |
+    | password | enkripsi("1234") |true |
 
 # e-commerce-cms-client
 
