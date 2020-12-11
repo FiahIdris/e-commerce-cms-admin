@@ -1,3 +1,7 @@
+Deploy Here:
+
+Ecommerce/CMS-Server
+
 # e-commerce-cms-client
 
 ## Project setup
